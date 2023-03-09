@@ -1,9 +1,5 @@
 {
-  "functions": {
-    "index": {
-      "memory": 128,
-      "runtime": "vercel/node",
-      "entrypoint": "index.js"
-    }
-  }
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.js" }
+  ]
 }
