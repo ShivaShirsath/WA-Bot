@@ -110,7 +110,7 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
           break;
         case "💛":
           try {
-            if (setting.keyopenai === "ISI_APIKEY_OPENAI_DISINI")
+            if (process.env.KEYOPENAI === "ISI_APIKEY_OPENAI_DISINI")
               return reply(
                 `
 The api key has not been filled.
@@ -126,7 +126,7 @@ https://beta.openai.com/account/api-keys
                 `Chat with AI.\n\nExample:\n${prefix}${command} What is a recession`
               );
             const configuration = new Configuration({
-              apiKey: setting.keyopenai,
+              apiKey: process.env.KEYOPENAI,
             });
             const openai = new OpenAIApi(configuration);
 
@@ -155,7 +155,7 @@ https://beta.openai.com/account/api-keys
         case "image":
         case "images":
           try {
-            if (setting.keyopenai === "ISI_APIKEY_OPENAI_DISINI")
+            if (process.env.KEYOPENAI === "ISI_APIKEY_OPENAI_DISINI")
               return reply(
                 `
 The api key has not been filled.
@@ -176,7 +176,7 @@ Example:
 `
               );
             const configuration = new Configuration({
-              apiKey: setting.keyopenai,
+              apiKey: process.env.KEYOPENAI,
             });
             const openai = new OpenAIApi(configuration);
             const response = await openai.createImage({
