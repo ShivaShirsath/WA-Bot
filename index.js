@@ -171,7 +171,7 @@ function smsg(conn, m, store) {
   return m;
 }
 
-async function startHisoka() {
+async function startShiva() {
   const { state, saveCreds } = await useMultiFileAuthState(
     `./${sessionName ? sessionName : "session"}`
   );
@@ -192,7 +192,7 @@ async function startHisoka() {
   const client = shivaConnect({
     logger: pino({ level: "silent" }),
     printQRInTerminal: true,
-    browser: ["Whatsapp-Chat-Bot - shiva", "Safari", "5.1.7"],
+    browser: ["Chat-Bot", "Safari", "5.1.7"],
     auth: state,
   });
 
@@ -318,10 +318,10 @@ async function startHisoka() {
         process.exit();
       } else if (reason === DisconnectReason.connectionClosed) {
         console.log("Connection closed, reconnecting....");
-        startHisoka();
+        startShiva();
       } else if (reason === DisconnectReason.connectionLost) {
         console.log("Connection Lost from Server, reconnecting...");
-        startHisoka();
+        startShiva();
       } else if (reason === DisconnectReason.connectionReplaced) {
         console.log(
           "Connection Replaced, Another New Session Opened, Please Restart Bot"
@@ -334,13 +334,13 @@ async function startHisoka() {
         process.exit();
       } else if (reason === DisconnectReason.restartRequired) {
         console.log("Restart Required, Restarting...");
-        startHisoka();
+        startShiva();
       } else if (reason === DisconnectReason.timedOut) {
         console.log("Connection TimedOut, Reconnecting...");
-        startHisoka();
+        startShiva();
       } else {
         console.log(`Unknown Disconnect Reason: ${reason}|${connection}`);
-        startHisoka();
+        startShiva();
       }
     } else if (connection === "open") {
       console.log(color("Bot success conneted to server", "green"));
@@ -348,8 +348,6 @@ async function startHisoka() {
       client.sendMessage(owner + "@s.whatsapp.net", {
         text: `
   Bot started!
-  Follow on github for Updates :)
-  ${glink}
 `,
       });
     }
@@ -439,7 +437,7 @@ async function startHisoka() {
   return client;
 }
 
-startHisoka();
+startShiva();
 
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {
