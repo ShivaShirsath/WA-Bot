@@ -142,7 +142,9 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
                 },
               },
             ],
-            image: { url: "https://i.ibb.co/DK3qzwy/MFarelS1.jpg" },
+            image: {
+              url: "https://raw.githubusercontent.com/ShivaShirsath/WA-Bot/master/logo.png",
+            },
           });
           console.log(sendMsg);
           break;
@@ -188,7 +190,9 @@ https://beta.openai.com/account/api-keys
                     },
                   },
                 ],
-                image: { url: "https://i.ibb.co/DK3qzwy/MFarelS1.jpg" },
+                image: {
+                  url: "https://raw.githubusercontent.com/ShivaShirsath/WA-Bot/master/logo.png",
+                },
               });
             const configuration = new Configuration({
               apiKey: process.env.KEYOPENAI,
@@ -267,7 +271,9 @@ https://beta.openai.com/account/api-keys
                     },
                   },
                 ],
-                image: { url: "https://i.ibb.co/DK3qzwy/MFarelS1.jpg" },
+                image: {
+                  url: "https://raw.githubusercontent.com/ShivaShirsath/WA-Bot/master/logo.png",
+                },
               });
             const configuration = new Configuration({
               apiKey: process.env.KEYOPENAI,
