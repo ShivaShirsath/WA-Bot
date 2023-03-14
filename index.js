@@ -1,5 +1,4 @@
 const sessionName = "shiva";
-const glink = "https://github.com/ShivaShirsath";
 const owner = ["919130057189"]; // Put your number here ex: ["62xxxxxxxxx"]
 const {
   default: shivaConnect,
@@ -19,15 +18,12 @@ const chalk = require("chalk");
 const figlet = require("figlet");
 const _ = require("lodash");
 const PhoneNumber = require("awesome-phonenumber");
-
 const store = makeInMemoryStore({
   logger: pino().child({ level: "silent", stream: "store" }),
 });
-
 const color = (text, color) => {
   return !color ? chalk.green(text) : chalk.keyword(color)(text);
 };
-
 function smsg(conn, m, store) {
   if (!m) return m;
   let M = proto.WebMessageInfo;
@@ -39,10 +35,10 @@ function smsg(conn, m, store) {
     m.isGroup = m.chat.endsWith("@g.us");
     m.sender = conn.decodeJid(
       (m.fromMe && conn.user.id) ||
-        m.participant ||
-        m.key.participant ||
-        m.chat ||
-        ""
+      m.participant ||
+      m.key.participant ||
+      m.chat ||
+      ""
     );
     if (m.isGroup) m.participant = conn.decodeJid(m.key.participant) || "";
   }
@@ -109,28 +105,10 @@ function smsg(conn, m, store) {
         message: quoted,
         ...(m.isGroup ? { participant: m.quoted.sender } : {}),
       }));
-
-      /**
-       *
-       * @returns
-       */
       m.quoted.delete = () =>
         conn.sendMessage(m.quoted.chat, { delete: vM.key });
-
-      /**
-       *
-       * @param {*} jid
-       * @param {*} forceForward
-       * @param {*} options
-       * @returns
-       */
       m.quoted.copyNForward = (jid, forceForward = false, options = {}) =>
         conn.copyNForward(jid, vM, forceForward, options);
-
-      /**
-       *
-       * @returns
-       */
       m.quoted.download = () => conn.downloadMediaMessage(m.quoted);
     }
   }
@@ -143,34 +121,15 @@ function smsg(conn, m, store) {
     m.msg.selectedDisplayText ||
     m.msg.title ||
     "";
-  /**
-   * Reply to this message
-   * @param {String|Object} text
-   * @param {String|false} chatId
-   * @param {Object} options
-   */
   m.reply = (text, chatId = m.chat, options = {}) =>
     Buffer.isBuffer(text)
       ? conn.sendMedia(chatId, text, "file", "", m, { ...options })
       : conn.sendText(chatId, text, m, { ...options });
-  /**
-   * Copy this message
-   */
   m.copy = () => exports.smsg(conn, M.fromObject(M.toObject(m)));
-
-  /**
-   *
-   * @param {*} jid
-   * @param {*} forceForward
-   * @param {*} options
-   * @returns
-   */
   m.copyNForward = (jid = m.chat, forceForward = false, options = {}) =>
     conn.copyNForward(jid, m, forceForward, options);
-
   return m;
 }
-
 async function startShiva() {
   const { state, saveCreds } = await useMultiFileAuthState(
     `./${sessionName ? sessionName : "session"}`
@@ -188,16 +147,13 @@ async function startShiva() {
       "gold"
     )
   );
-
   const client = shivaConnect({
     logger: pino({ level: "silent" }),
     printQRInTerminal: true,
     browser: ["Chat-Bot", "Safari", "5.1.7"],
     auth: state,
   });
-
   store.bind(client.ev);
-
   client.ev.on("messages.upsert", async (chatUpdate) => {
     //console.log(JSON.stringify(chatUpdate, undefined, 2))
     try {
@@ -217,7 +173,6 @@ async function startShiva() {
       console.log(err);
     }
   });
-
   // Handle error
   const unhandledRejections = new Map();
   process.on("unhandledRejection", (reason, promise) => {
@@ -230,7 +185,6 @@ async function startShiva() {
   process.on("Something went wrong", function (err) {
     console.log("Caught exception: ", err);
   });
-
   // Setting
   client.decodeJid = (jid) => {
     if (!jid) return jid;
@@ -242,7 +196,6 @@ async function startShiva() {
       );
     } else return jid;
   };
-
   client.ev.on("contacts.update", (update) => {
     for (let contact of update) {
       let id = client.decodeJid(contact.id);
@@ -250,7 +203,6 @@ async function startShiva() {
         store.contacts[id] = { id, name: contact.notify };
     }
   });
-
   client.getName = (jid, withoutContact = false) => {
     id = client.decodeJid(jid);
     withoutContact = client.withoutContact || withoutContact;
@@ -261,22 +213,22 @@ async function startShiva() {
         if (!(v.name || v.subject)) v = client.groupMetadata(id) || {};
         resolve(
           v.name ||
-            v.subject ||
-            PhoneNumber("+" + id.replace("@s.whatsapp.net", "")).getNumber(
-              "international"
-            )
+          v.subject ||
+          PhoneNumber("+" + id.replace("@s.whatsapp.net", "")).getNumber(
+            "international"
+          )
         );
       });
     else
       v =
         id === "0@s.whatsapp.net"
           ? {
-              id,
-              name: "WhatsApp",
-            }
+            id,
+            name: "WhatsApp",
+          }
           : id === client.decodeJid(client.user.id)
-          ? client.user
-          : store.contacts[id] || {};
+            ? client.user
+            : store.contacts[id] || {};
     return (
       (withoutContact ? "" : v.name) ||
       v.subject ||
@@ -286,7 +238,6 @@ async function startShiva() {
       )
     );
   };
-
   client.setStatus = (status) => {
     client.query({
       tag: "iq",
@@ -305,9 +256,7 @@ async function startShiva() {
     });
     return status;
   };
-
   client.public = true;
-
   client.serializeM = (m) => smsg(client, m, store);
   client.ev.on("connection.update", async (update) => {
     const { connection, lastDisconnect } = update;
@@ -347,15 +296,13 @@ async function startShiva() {
       console.log(color("Type /💝 to see menu"));
       client.sendMessage(owner + "@s.whatsapp.net", {
         text: `
-  Bot started!
+  Bot started !
 `,
       });
     }
-    // console.log('Connected...', update)
+    console.log(update)
   });
-
   client.ev.on("creds.update", saveCreds);
-
   const getBuffer = async (url, options) => {
     try {
       options ? options : {};
@@ -374,27 +321,24 @@ async function startShiva() {
       return err;
     }
   };
-
   client.sendImage = async (jid, path, caption = "", quoted = "", options) => {
     let buffer = Buffer.isBuffer(path)
       ? path
       : /^data:.*?\/.*?;base64,/i.test(path)
-      ? Buffer.from(path.split`,`[1], "base64")
-      : /^https?:\/\//.test(path)
-      ? await await getBuffer(path)
-      : fs.existsSync(path)
-      ? fs.readFileSync(path)
-      : Buffer.alloc(0);
+        ? Buffer.from(path.split`,`[1], "base64")
+        : /^https?:\/\//.test(path)
+          ? await await getBuffer(path)
+          : fs.existsSync(path)
+            ? fs.readFileSync(path)
+            : Buffer.alloc(0);
     return await client.sendMessage(
       jid,
       { image: buffer, caption: caption, ...options },
       { quoted }
     );
   };
-
   client.sendText = (jid, text, quoted = "", options) =>
     client.sendMessage(jid, { text: text, ...options }, { quoted });
-
   client.cMod = (
     jid,
     copy,
@@ -430,15 +374,11 @@ async function startShiva() {
       sender = sender || copy.key.remoteJid;
     copy.key.remoteJid = jid;
     copy.key.fromMe = sender === client.user.id;
-
     return proto.WebMessageInfo.fromObject(copy);
   };
-
   return client;
 }
-
 startShiva();
-
 let file = require.resolve(__filename);
 fs.watchFile(file, () => {
   fs.unwatchFile(file);
