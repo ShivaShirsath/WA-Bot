@@ -13,6 +13,42 @@ const fs = require("fs");
 const util = require("util");
 const chalk = require("chalk");
 const { Configuration, OpenAIApi } = require("openai");
+
+const getBanner = (cmd) => {
+  banner = `
+╭                        ╮
+
+
+
+    𝚆𝚑𝚊𝚝𝚜𝚊𝚙𝚙 𝙱𝙾𝚃 𝙾𝚙𝚎𝚗𝙰𝙸
+       🪀    🤖   ✳️
+
+
+   💭               
+╰                        ╯`;
+  str = ``;
+  switch (cmd) {
+    case "💛":
+      str = `Get Answer from ChatGPT`;
+      break;
+    case "🩷":
+      str = `Create an image from AI`;
+      break;
+    default:
+      str = `.💛                .🩷`;
+  }
+  return `\`\`\`${banner}
+┏═══════════════┓
+  ${str} ${str.includes(`.💛                .🩷`)
+      ? ``
+      : `
+      
+  Example:
+   .${cmd} ${"💛" === cmd ? `Simple Java Code?` : `House on tree`}`
+    }
+┗═══════════════┛
+\`\`\``;
+};
 module.exports = shiva = async (client, m, chatUpdate, store) => {
   try {
     var body =
@@ -87,23 +123,10 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
     }
     if (isCmd2) {
       switch (command) {
-        case "💚":
-          console.log(
-            await client.sendMessage(from, {
-              text: `\`\`\`
-╭                        ╮
-
-
-
-    𝚆𝚑𝚊𝚝𝚜𝚊𝚙𝚙 𝙱𝙾𝚃 𝙾𝚙𝚎𝚗𝙰𝙸
-       🪀    🤖   ✳️
-
-
-   💭               
-╰                        ╯
-\`\`\``,
-            })
-          );
+        case "🧡":
+          client.sendMessage(from, {
+            text: getBanner(command),
+          });
           break;
         case "💛":
           try {
@@ -112,30 +135,10 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
  api key missing
 
  Generate using beta.openai.com/account/api-keys
-`
-              );
+`);
             if (!text)
               return await client.sendMessage(from, {
-                text: `\`\`\`
-╭                        ╮
-
-
-
-    𝚆𝚑𝚊𝚝𝚜𝚊𝚙𝚙 𝙱𝙾𝚃 𝙾𝚙𝚎𝚗𝙰𝙸
-       🪀    🤖   ✳️
-
-
-   💭               
-╰                        ╯
-┏═══════════════┓
-    Get Answer from AI
-
-   Specify your Question
-
-  Example:
-   ${prefix}${command} Simple Java Code?
-┗═══════════════┛
-\`\`\``,
+                text: getBanner(command),
               });
             const openai = new OpenAIApi(
               new Configuration({
@@ -144,10 +147,11 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
             );
             const response = await openai.createChatCompletion({
               model: "gpt-3.5-turbo",
-              messages: [{
-                role: "user",
-                content: text,
-              },
+              messages: [
+                {
+                  role: "user",
+                  content: text,
+                },
               ],
             });
             m.reply(`${response.data.choices[0].message.content}`);
@@ -160,7 +164,7 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
             }
           }
           break;
-        case "💖":
+        case "🩷":
           try {
             if (process.env.KEYOPENAI === "ISI_APIKEY_OPENAI_DISINI")
               return reply(`
@@ -170,36 +174,19 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
 `);
             if (!text)
               return await client.sendMessage(from, {
-                text: `\`\`\`
-╭                        ╮
-
-
-
-    𝚆𝚑𝚊𝚝𝚜𝚊𝚙𝚙 𝙱𝙾𝚃 𝙾𝚙𝚎𝚗𝙰𝙸
-       🪀    🤖   ✳️
-
-
-   💭               
-╰                        ╯
-┏═══════════════┓
-  Create an image from AI
-
-  Explain image in text,
-
-  Example:
-   ${prefix}${command} House on tree 
-┗═══════════════┛
-\`\`\``,
+                text: getBanner(command),
               });
-            const openai = new OpenAIApi(new Configuration({
-              apiKey: process.env.KEYOPENAI,
-            }));
+            const openai = new OpenAIApi(
+              new Configuration({
+                apiKey: process.env.KEYOPENAI,
+              })
+            );
             const response = await openai.createImage({
               prompt: text,
               n: 1,
               size: "512x512",
             });
-            console.log(response.data.data[0].url)
+            console.log(response.data.data[0].url);
             client.sendImage(from, response.data.data[0].url, text, mek);
           } catch (error) {
             if (error.response) {

@@ -1,5 +1,5 @@
 {
-  "name": "Whatsapp-Chat-Bot",
+  "name": "Chat-Bot",
   "version": "2.0.0",
   "description": "WhatsApp Bot OpenAI Using Lib Baileys Multi Device",
   "main": "index.js",

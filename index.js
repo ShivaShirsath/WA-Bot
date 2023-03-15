@@ -150,7 +150,7 @@ async function startShiva() {
   const client = shivaConnect({
     logger: pino({ level: "silent" }),
     printQRInTerminal: true,
-    browser: ["Chat-Bot", "Safari", "5.1.7"],
+    browser: ["🤖", "Safari", "5.1.7"],
     auth: state,
   });
   store.bind(client.ev);
@@ -292,15 +292,14 @@ async function startShiva() {
         startShiva();
       }
     } else if (connection === "open") {
-      console.log(color("Bot success conneted to server", "green"));
-      console.log(color("Type /💝 to see menu"));
+      console.log(color("Type .🧡 to see menu"));
       client.sendMessage(owner + "@s.whatsapp.net", {
         text: `
-  Bot started !
+  🤖 started !
 `,
       });
     }
-    console.log(update)
+    console.log(update);
   });
   client.ev.on("creds.update", saveCreds);
   const getBuffer = async (url, options) => {
