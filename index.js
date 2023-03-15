@@ -35,10 +35,10 @@ function smsg(conn, m, store) {
     m.isGroup = m.chat.endsWith("@g.us");
     m.sender = conn.decodeJid(
       (m.fromMe && conn.user.id) ||
-      m.participant ||
-      m.key.participant ||
-      m.chat ||
-      ""
+        m.participant ||
+        m.key.participant ||
+        m.chat ||
+        ""
     );
     if (m.isGroup) m.participant = conn.decodeJid(m.key.participant) || "";
   }
@@ -150,7 +150,7 @@ async function startShiva() {
   const client = shivaConnect({
     logger: pino({ level: "silent" }),
     printQRInTerminal: true,
-    browser: ["Chat-Bot", "Safari", "5.1.7"],
+    browser: ["Test 🤖", "Safari", "5.1.7"],
     auth: state,
   });
   store.bind(client.ev);
@@ -213,22 +213,22 @@ async function startShiva() {
         if (!(v.name || v.subject)) v = client.groupMetadata(id) || {};
         resolve(
           v.name ||
-          v.subject ||
-          PhoneNumber("+" + id.replace("@s.whatsapp.net", "")).getNumber(
-            "international"
-          )
+            v.subject ||
+            PhoneNumber("+" + id.replace("@s.whatsapp.net", "")).getNumber(
+              "international"
+            )
         );
       });
     else
       v =
         id === "0@s.whatsapp.net"
           ? {
-            id,
-            name: "WhatsApp",
-          }
+              id,
+              name: "WhatsApp",
+            }
           : id === client.decodeJid(client.user.id)
-            ? client.user
-            : store.contacts[id] || {};
+          ? client.user
+          : store.contacts[id] || {};
     return (
       (withoutContact ? "" : v.name) ||
       v.subject ||
@@ -296,11 +296,11 @@ async function startShiva() {
       console.log(color("Type /💝 to see menu"));
       client.sendMessage(owner + "@s.whatsapp.net", {
         text: `
-  Bot started !
+  Test: 🤖 started !
 `,
       });
     }
-    console.log(update)
+    console.log(update);
   });
   client.ev.on("creds.update", saveCreds);
   const getBuffer = async (url, options) => {
@@ -325,12 +325,12 @@ async function startShiva() {
     let buffer = Buffer.isBuffer(path)
       ? path
       : /^data:.*?\/.*?;base64,/i.test(path)
-        ? Buffer.from(path.split`,`[1], "base64")
-        : /^https?:\/\//.test(path)
-          ? await await getBuffer(path)
-          : fs.existsSync(path)
-            ? fs.readFileSync(path)
-            : Buffer.alloc(0);
+      ? Buffer.from(path.split`,`[1], "base64")
+      : /^https?:\/\//.test(path)
+      ? await await getBuffer(path)
+      : fs.existsSync(path)
+      ? fs.readFileSync(path)
+      : Buffer.alloc(0);
     return await client.sendMessage(
       jid,
       { image: buffer, caption: caption, ...options },

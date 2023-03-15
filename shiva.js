@@ -87,7 +87,7 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
     }
     if (isCmd2) {
       switch (command) {
-        case "💚":
+        case "💝":
           console.log(
             await client.sendMessage(from, {
               text: `\`\`\`
@@ -112,8 +112,7 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
  api key missing
 
  Generate using beta.openai.com/account/api-keys
-`
-              );
+`);
             if (!text)
               return await client.sendMessage(from, {
                 text: `\`\`\`
@@ -144,10 +143,11 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
             );
             const response = await openai.createChatCompletion({
               model: "gpt-3.5-turbo",
-              messages: [{
-                role: "user",
-                content: text,
-              },
+              messages: [
+                {
+                  role: "user",
+                  content: text,
+                },
               ],
             });
             m.reply(`${response.data.choices[0].message.content}`);
@@ -191,15 +191,17 @@ module.exports = shiva = async (client, m, chatUpdate, store) => {
 ┗═══════════════┛
 \`\`\``,
               });
-            const openai = new OpenAIApi(new Configuration({
-              apiKey: process.env.KEYOPENAI,
-            }));
+            const openai = new OpenAIApi(
+              new Configuration({
+                apiKey: process.env.KEYOPENAI,
+              })
+            );
             const response = await openai.createImage({
               prompt: text,
               n: 1,
               size: "512x512",
             });
-            console.log(response.data.data[0].url)
+            console.log(response.data.data[0].url);
             client.sendImage(from, response.data.data[0].url, text, mek);
           } catch (error) {
             if (error.response) {
