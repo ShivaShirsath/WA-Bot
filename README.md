@@ -18,3 +18,5 @@ cd WA-Bot
 pnpm install
 pnpm start
 ```
+
+[.](https://wa.me/+919130057189?text=.🧡)
